@@ -81,7 +81,8 @@
     </style>
 </head>
 
-<body class="bg-light p-4">
+<body class="p-4">
+
 
 <div class="container mt-5">
     <div class="card shadow p-4">

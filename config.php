@@ -80,7 +80,10 @@
         }
     </style>
 </head>
-<body class="bg-light p-4">
+
+
+<body class="p-4">
+
 
 
 <?php

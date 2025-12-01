@@ -83,4 +83,5 @@ $pdo = new PDO("mysql:host=localhost;dbname=campeonato", "root", "");
         }
     </style>
 </head>
-<body class="bg-light p-4">
+<body class="p-4">
+

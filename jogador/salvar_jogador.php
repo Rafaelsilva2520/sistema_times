@@ -1,6 +1,6 @@
-<?php include "../conexao.php"; ?>
-
-
+<?php 
+include "../conexao.php"; 
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,46 +82,71 @@
             background: #161616;
         }
     </style>
+</head>
+<body class="p-4">
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Jogador</title>
+
+    <!-- Bootstrap para deixar bonito -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+
 <body class="bg-light p-4">
 
+<div class="container mt-5">
+    <div class="card shadow p-4">
 
+        <h2 class="mb-4">Cadastrar Jogador</h2>
 
-<form method="POST">
-    Nome: <input type="text" name="nome"><br>
-    Ranking: <input type="text" name="ranking"><br>
-    <button type="submit">Salvar</button>
-</form>
+       
+        <form method="POST">
 
-<?php
-if(isset($_POST['nome'])){
-    $nome = $_POST['nome'];
-    $ranking = $_POST['ranking'];
+            <label class="form-label">Nome do Jogador:</label>
+            <input type="text" name="nome" class="form-control mb-3" required>
 
-    // Busca os times que ainda têm vaga
-    $sql = "
-        SELECT limites.time_id 
-        FROM limites
-        LEFT JOIN jogadores
-        ON (jogadores.time_id = limites.time_id AND jogadores.ranking = limites.ranking)
-        WHERE limites.ranking = '$ranking'
-        GROUP BY limites.time_id
-        HAVING COUNT(jogadores.id) < limites.limite
-    ";
+            <label class="form-label">Ranking:</label>
+            <select name="ranking" class="form-control mb-3" required>
+                <option value="craque">Craque</option>
+                <option value="bom">Bom</option>
+                <option value="intermediario">Intermediário</option>
+                <option value="ascendente">Ascendente</option>
+                <option value="ruim">Ruim</option>
+            </select>
 
-    $r = $pdo->query($sql);
-    $times = $r->fetchAll(PDO::FETCH_COLUMN);
+            <button class="btn btn-primary w-100">Salvar Jogador</button>
 
-    if(count($times) == 0){
-        die('Nenhum time tem vaga para esse tipo de jogador.');
-    }
+        </form>
 
-    // Sorteia um time
-    $timeEscolhido = $times[array_rand($times)];
+        <br>
 
-    // Salva o jogador
-    $pdo->query("INSERT INTO jogadores (nome, ranking, time_id)
-                 VALUES ('$nome', '$ranking', '$timeEscolhido')");
+        <?php
+        // --- QUANDO O USUÁRIO CLICA EM SALVAR ---
+        if (isset($_POST['nome'])) {
 
-    echo "Jogador salvo no time: $timeEscolhido";
-}
-?>
+            // Recebe os dados do formulário
+            $nome = $_POST['nome'];
+            $ranking = $_POST['ranking'];
+
+            // Prepara o comando SQL
+            $sql = $conn->prepare("INSERT INTO jogadores (nome, ranking) VALUES (?, ?)");
+
+            $sql->bind_param("ss", $nome, $ranking);
+   if ($sql->execute()) {
+                echo "<div class='alert alert-success'>Jogador salvo com sucesso!</div>";
+            } else {
+                echo "<div class='alert alert-danger'>Erro ao salvar.</div>";
+            }
+        }
+        ?>
+
+    </div>
+</div>
+
+</body>
+</html>
